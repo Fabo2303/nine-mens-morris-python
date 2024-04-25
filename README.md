@@ -1,3 +1,5 @@
+# AÚN SE ENCUENTRA EN DESARROLLO
+
 # NINE MEN'S MORRYS ESCALADO - PYGAME
 
 Este proyecto fue propuesto para el curso de Inteligencia Artificial del ciclo VII de la carrera de Ingeniería de Sistemas de la Universidad Nacional Mayor de San Marcos.
