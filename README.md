@@ -28,9 +28,9 @@ Este juego es esencialmente similar al Nine Men's Morris original, con una difer
 ## Intrucciones para su uso
 ### Desde Terminal
 - Clonar el repositorio.
-````bash
-git clone git@github.com:Fabo2303/nine-mens-morris-python.git
-````
+    ````bash
+    git clone git@github.com:Fabo2303/nine-mens-morris-python.git
+    ````
 - Dirigirse al proyecto en la terminal.
 - [Crear el entorno virtual](#crear-entorno-virtual)
 - Instalar pygame.

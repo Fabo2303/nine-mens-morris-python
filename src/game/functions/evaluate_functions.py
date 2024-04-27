@@ -112,8 +112,8 @@ def number_of_three_pieces_configuration(board, player):
 
 
 def evaluate_drop_phase(board, player_1, player_2):
-    new_mill_1 = find_complete_mills(player_1, only_one=True)
-    new_mill_2 = find_complete_mills(player_2, only_one=True)
+    new_mill_1 = find_complete_mills(player_1, only_one=True, is_test=True)
+    new_mill_2 = find_complete_mills(player_2, only_one=True, is_test=True)
 
     evaluation = (-new_mill_1 if new_mill_1 > new_mill_2 else new_mill_2) * 18
     # print("Evaluation - 1: ", evaluation)

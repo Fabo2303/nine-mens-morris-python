@@ -60,14 +60,16 @@ class Player:
             return
         circle.change_number(3)
 
-    def copy_data(self):
+    def copy_data(self, trap=False):
         player = Player(self.player_number)
         player.tokens_to_place = self.tokens_to_place
         player.tokens_on_board = self.tokens_on_board
         player.game_phase = self.game_phase
-        # player.circles = self.circles.copy()
-        for circle in self.circles:
-            player.circles.append(circle.copy_data())
+        if trap:
+            player.circles = self.circles.copy()
+        else:
+            for circle in self.circles:
+                player.circles.append(circle.copy_data())
         return player
 
     def print_circles(self):

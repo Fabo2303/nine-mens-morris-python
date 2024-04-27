@@ -18,13 +18,13 @@ def get_best_drop_move(board, player_1, player_2):
     for move in generate_drop_moves(board):
         # print("Move: ", move)
         new_board = board.copy()
-        player_1_copy = player_1.copy_data()
-        player_2_copy = player_2.copy_data()
+        player_1_copy = player_1.copy_data(True)
+        player_2_copy = player_2.copy_data(True)
         new_board[move] = (new_board[move][0], new_board[move][1], 2)
         create_circle_for_player(new_board, player_2_copy, move)
         # print_board(new_board)
         # print("Enter minimax drop phase:")
-        eval = minimax_drop_phase(new_board, 2, False, player_1_copy, player_2_copy)
+        eval = minimax_drop_phase(new_board, 1, False, player_1_copy, player_2_copy)
         if eval > best_eval:
             best_eval = eval
             best_move = move
@@ -60,8 +60,8 @@ def minimax_drop_phase(board, depth, maximizing_player, player_1_copy, player_2_
         max_eval = -math.inf
         for move in generate_drop_moves(board):
             new_board = board.copy()
-            player_1_copy_copy = player_1_copy.copy_data()
-            player_2_copy_copy = player_2_copy.copy_data()
+            player_1_copy_copy = player_1_copy.copy_data(True)
+            player_2_copy_copy = player_2_copy.copy_data(True)
             new_board[move] = (new_board[move][0], new_board[move][1], 2)
             create_circle_for_player(new_board, player_2_copy_copy, move)
             # print_board(new_board)
@@ -75,8 +75,8 @@ def minimax_drop_phase(board, depth, maximizing_player, player_1_copy, player_2_
         min_eval = math.inf
         for move in generate_drop_moves(board):
             new_board = board.copy()
-            player_1_copy_copy = player_1_copy.copy_data()
-            player_2_copy_copy = player_2_copy.copy_data()
+            player_1_copy_copy = player_1_copy.copy_data(True)
+            player_2_copy_copy = player_2_copy.copy_data(True)
             new_board[move] = (new_board[move][0], new_board[move][1], 1)
             create_circle_for_player(new_board, player_1_copy_copy, move)
             # # print_board(new_board)

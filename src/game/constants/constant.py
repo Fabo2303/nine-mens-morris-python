@@ -78,10 +78,3 @@ class GamePhaseConstants(Enum):
 class GameConstants(Enum):
     TOKEN_AVAILABLE = 1
     TOKEN_BLOCK = 0
-    SPLASH_MODE = 1
-    MOVING_MODE = 2
-    FLYING_MODE = 3
-    ELIMINATION_MODE = 4
-    GAME_OVER = -1
-    PLAYER_VS_PLAYER = 1
-    PLAYER_VS_AI = 2

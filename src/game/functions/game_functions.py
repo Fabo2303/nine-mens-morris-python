@@ -1,9 +1,8 @@
 # Path: src/game/functions/game_fuctions.py
 
 from math import dist
-from game.constants.constant import ColorConstants, GameConstants
+from game.constants.constant import GamePhaseConstants
 from game.elimination_phase.elimination_functions import delete_piece
-from game.functions.drawing_functions import draw_circle
 from game.moving_phase.moving_functions_ai import move_piece_ai
 from game.splash_phase.splash_functions import place_piece
 from game.splash_phase.splash_functions_ai import place_piece_ai
@@ -13,15 +12,15 @@ from game.moving_phase.moving_functions import move_piece
 
 player_1_aux = None
 player_2_aux = None
-possible_moves = []
+possible_moves_aux = []
 piece_select = -1
 
 
-def click_control(x, y, window, player_1, player_2, turn):
-    global player_1_aux, player_2_aux
+def click_control(x, y, window, player_1, player_2, turn, possible_moves):
+    global player_1_aux, player_2_aux, possible_moves_aux
     player_1_aux = player_1
     player_2_aux = player_2
-
+    possible_moves_aux = possible_moves
     return turn_control(x, y, window, turn)
 
 
@@ -30,17 +29,17 @@ def turn_control(x, y, window, turn):
         (player_1_aux, player_2_aux) if turn == 1 else (player_2_aux, player_1_aux)
     )
     player_game_phase = player.game_phase
-    if player_game_phase == GameConstants.SPLASH_MODE.value:
-        return splash_mode(x, y, player, window, turn)
-    if player_game_phase == GameConstants.MOVING_MODE.value:
-        return moving_mode(x, y, player, window, turn)
-    if player_game_phase == GameConstants.FLYING_MODE.value:
+    if player_game_phase == GamePhaseConstants.SPLASH_MODE.value:
+        return splash_mode(x, y, player, window)
+    if player_game_phase == GamePhaseConstants.MOVING_MODE.value:
+        return moving_mode(x, y, player)
+    if player_game_phase == GamePhaseConstants.FLYING_MODE.value:
         return
-    if player_game_phase == GameConstants.ELIMINATION_MODE.value:
-        return elimination_mode(x, y, player, oponent, window, turn)
+    if player_game_phase == GamePhaseConstants.ELIMINATION_MODE.value:
+        return elimination_mode(x, y, player, oponent)
 
 
-def splash_mode(x, y, player, window, turn):
+def splash_mode(x, y, player, window):
     index = 0
     if x == -100 and y == -100:
         index = place_piece_ai(player_1_aux, player_2_aux)
@@ -59,15 +58,14 @@ def splash_mode(x, y, player, window, turn):
     return player_moved
 
 
-def elimination_mode(x, y, player, oponent, window, turn):
-    oponent = player_1_aux if turn == 2 else player_2_aux
+def elimination_mode(x, y, player, oponent):
     if delete_piece(x, y, oponent):
         player.change_phase(False)
         return True
     return False
 
 
-def select_piece(x, y, player, window):
+def select_piece(x, y, player):
     global piece_select
     for circle in player.circles:
         pos_x = circle.x
@@ -75,47 +73,40 @@ def select_piece(x, y, player, window):
         distance = dist((x, y), (pos_x, pos_y))
         if distance < 10:
             piece_select = circle.index_origin
-            show_possible_moves(piece_select, window)
+            show_possible_moves(piece_select)
             break
 
 
-def show_possible_moves(index, window):
-    global possible_moves
-    if len(possible_moves) > 0:
-        for possible_move in possible_moves:
-            window.delete(possible_move)
-        possible_moves.clear()
+def show_possible_moves(index):
+    global possible_moves_aux
+    if len(possible_moves_aux) > 0:
+        possible_moves_aux.clear()
     for adjacent in adjacent_positions[index]:
         (x, y, state) = positions[adjacent]
         if state == 0:
-            possible_moves.append(
-                draw_circle(window, x, y, ColorConstants.POSIBLE_MOVE_COLOR)
-            )
+            possible_moves_aux.append((x, y))
 
 
-def moving_mode(x, y, player, window, turn):
-    global possible_moves, piece_select
+def moving_mode(x, y, player):
+    global possible_moves_aux, piece_select
     if x == -100 and y == -100:
         (index, move) = move_piece_ai(player_1_aux, player_2_aux)
         x = positions[move][0]
         y = positions[move][1]
         piece_select = index
     else:
-        select_piece(x, y, player, window)
+        select_piece(x, y, player)
     if piece_select != -1:
         player_moved = move_piece(x, y, player, piece_select)
-        # print("Player moved: ", player_moved)
         if player_moved:
             is_mill = find_complete_mills(player, True, False)
+            if len(possible_moves_aux) > 0:
+                possible_moves_aux.clear()
             if is_mill == 1:
                 print("Mill")
                 player.change_phase(True)
                 return
             piece_select = -1
-            if len(possible_moves) > 0:
-                for possible_move in possible_moves:
-                    window.delete(possible_move)
-                possible_moves.clear()
             return True
     return False
 

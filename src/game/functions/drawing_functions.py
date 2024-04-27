@@ -8,10 +8,10 @@ from game.constants.constant import (
     WindowConstants,
     GameModeConstants,
     MenuConstants,
+    GameDifficultyConstants,
 )
 from game.constants.array_constants import positions, horizontal_lines, vertical_lines
 import pygame
-import math
 
 
 def draw_square(window, x, y, width, height, color):
@@ -90,10 +90,10 @@ def draw_escalated(window, text, x, y, width, height, text_color, font_size, ang
     window.blit(text_surface, text_rect)
 
 
-def draw_menu_vs(window):
+def draw_menu_vs(window, menu=0):
     draw_title(
         window,
-        WindowConstants.CAPTION.value.lower(),
+        WindowConstants.CAPTION.value.lower() if menu == 0 else "select difficulty",
         MenuConstants.TITLE_X.value,
         MenuConstants.TITLE_Y.value,
         MenuConstants.TITLE_WIDTH.value,
@@ -103,7 +103,7 @@ def draw_menu_vs(window):
     )
     draw_escalated(
         window,
-        "scaled",
+        "scaled" if menu == 0 else "💀💀💀",
         MenuConstants.TITLE_X.value + 200,
         MenuConstants.TITLE_Y.value + 50,
         MenuConstants.TITLE_WIDTH.value,
@@ -115,7 +115,11 @@ def draw_menu_vs(window):
     button_rects = {}
     button_rects[1] = draw_button(
         window,
-        GameModeConstants.PLAYER_VS_PLAYER.name.lower(),
+        (
+            GameModeConstants.PLAYER_VS_PLAYER.name.lower()
+            if menu == 0
+            else GameDifficultyConstants.EASY.name.lower()
+        ),
         MenuConstants.BUTTON_X.value,
         MenuConstants.BUTTON_Y.value,
         MenuConstants.BUTTON_WIDTH.value,
@@ -126,7 +130,11 @@ def draw_menu_vs(window):
     )
     button_rects[2] = draw_button(
         window,
-        GameModeConstants.PLAYER_VS_AI.name.lower(),
+        (
+            GameModeConstants.PLAYER_VS_AI.name.lower()
+            if menu == 0
+            else GameDifficultyConstants.MEDIUM.name.lower()
+        ),
         MenuConstants.BUTTON_X.value,
         MenuConstants.BUTTON_Y.value + MenuConstants.BUTTON_SPACING.value,
         MenuConstants.BUTTON_WIDTH.value,
@@ -138,7 +146,11 @@ def draw_menu_vs(window):
 
     button_rects[3] = draw_button(
         window,
-        GameModeConstants.AI_VS_AI.name.lower(),
+        (
+            GameModeConstants.AI_VS_AI.name.lower()
+            if menu == 0
+            else GameDifficultyConstants.HARD.name.lower()
+        ),
         MenuConstants.BUTTON_X.value,
         MenuConstants.BUTTON_Y.value + MenuConstants.BUTTON_SPACING.value * 2,
         MenuConstants.BUTTON_WIDTH.value,
