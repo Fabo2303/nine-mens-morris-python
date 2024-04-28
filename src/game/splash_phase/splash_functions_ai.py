@@ -6,25 +6,29 @@ from game.constants.array_constants import positions
 from game.functions.evaluate_functions import evaluate_drop_phase, find_complete_mills
 
 
-def place_piece_ai(player_1, player_2):
+def place_piece_ai(player, opponent):
     board = positions
-    move = get_best_drop_move(board, player_1, player_2)
+    move = get_best_drop_move(board, player, opponent)
     return move
 
 
-def get_best_drop_move(board, player_1, player_2):
+def get_best_drop_move(board, player, opponent):
     best_move = None
     best_eval = -math.inf
     for move in generate_drop_moves(board):
         # print("Move: ", move)
         new_board = board.copy()
-        player_1_copy = player_1.copy_data(True)
-        player_2_copy = player_2.copy_data(True)
-        new_board[move] = (new_board[move][0], new_board[move][1], 2)
-        create_circle_for_player(new_board, player_2_copy, move)
+        player_copy = player.copy_data(True)
+        opponent_copy = opponent.copy_data(True)
+        new_board[move] = (
+            new_board[move][0],
+            new_board[move][1],
+            player_copy.player_number,
+        )
+        create_circle_for_player(new_board, player_copy, move)
         # print_board(new_board)
         # print("Enter minimax drop phase:")
-        eval = minimax_drop_phase(new_board, 1, False, player_1_copy, player_2_copy)
+        eval = minimax_drop_phase(new_board, 1, False, player_copy, opponent_copy)
         if eval > best_eval:
             best_eval = eval
             best_move = move
@@ -39,19 +43,15 @@ def generate_drop_moves(board):
     return drop_moves
 
 
-def evaluate_phase(board, player_1_copy, player_2_copy):
-    return evaluate_drop_phase(board, player_1_copy, player_2_copy)
-
-
-def minimax_drop_phase(board, depth, maximizing_player, player_1_copy, player_2_copy):
+def minimax_drop_phase(board, depth, maximizing_player, player_copy, opponent_copy):
     if (
         depth == 0
-        or player_1_copy.tokens_to_place == 0
-        or player_2_copy.tokens_to_place == 0
-        or find_complete_mills(player_1_copy, True, True) == 1
-        or find_complete_mills(player_2_copy, True, True) == 1
+        or player_copy.tokens_to_place == 0
+        or opponent_copy.tokens_to_place == 0
+        or find_complete_mills(player_copy, True, True) == 1
+        or find_complete_mills(opponent_copy, True, True) == 1
     ):
-        evaluation = evaluate_phase(board, player_1_copy, player_2_copy)
+        evaluation = evaluate_drop_phase(board, player_copy, opponent_copy)
         # print("Evaluation: ", evaluation)
         return evaluation
 
@@ -60,14 +60,18 @@ def minimax_drop_phase(board, depth, maximizing_player, player_1_copy, player_2_
         max_eval = -math.inf
         for move in generate_drop_moves(board):
             new_board = board.copy()
-            player_1_copy_copy = player_1_copy.copy_data(True)
-            player_2_copy_copy = player_2_copy.copy_data(True)
-            new_board[move] = (new_board[move][0], new_board[move][1], 2)
-            create_circle_for_player(new_board, player_2_copy_copy, move)
+            player_copy_copy = player_copy.copy_data(True)
+            opponent_copy_copy = opponent_copy.copy_data(True)
+            new_board[move] = (
+                new_board[move][0],
+                new_board[move][1],
+                player_copy.player_number,
+            )
+            create_circle_for_player(new_board, player_copy_copy, move)
             # print_board(new_board)
             # print("Enter minimax drop phase:")
             eval = minimax_drop_phase(
-                new_board, depth - 1, False, player_1_copy_copy, player_2_copy_copy
+                new_board, depth - 1, False, player_copy_copy, opponent_copy_copy
             )
             max_eval = max(max_eval, eval)
         return max_eval
@@ -75,14 +79,18 @@ def minimax_drop_phase(board, depth, maximizing_player, player_1_copy, player_2_
         min_eval = math.inf
         for move in generate_drop_moves(board):
             new_board = board.copy()
-            player_1_copy_copy = player_1_copy.copy_data(True)
-            player_2_copy_copy = player_2_copy.copy_data(True)
-            new_board[move] = (new_board[move][0], new_board[move][1], 1)
-            create_circle_for_player(new_board, player_1_copy_copy, move)
+            player_copy_copy = player_copy.copy_data(True)
+            opponent_copy_copy = opponent_copy.copy_data(True)
+            new_board[move] = (
+                new_board[move][0],
+                new_board[move][1],
+                opponent_copy.player_number,
+            )
+            create_circle_for_player(new_board, opponent_copy_copy, move)
             # # print_board(new_board)
             # print("Enter minimax drop phase:")
             eval = minimax_drop_phase(
-                new_board, depth - 1, True, player_1_copy_copy, player_2_copy_copy
+                new_board, depth - 1, True, player_copy_copy, opponent_copy_copy
             )
             min_eval = min(min_eval, eval)
         return min_eval

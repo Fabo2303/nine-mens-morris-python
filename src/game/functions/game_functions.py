@@ -2,6 +2,7 @@
 
 from math import dist
 from game.constants.constant import GamePhaseConstants
+from game.elimination_phase.elimination_functions_ai import delete_piece_ai
 from game.elimination_phase.elimination_functions import delete_piece
 from game.moving_phase.moving_functions_ai import move_piece_ai
 from game.splash_phase.splash_functions import place_piece
@@ -10,39 +11,36 @@ from game.constants.array_constants import positions, adjacent_positions
 from game.functions.evaluate_functions import find_complete_mills
 from game.moving_phase.moving_functions import move_piece
 
-player_1_aux = None
-player_2_aux = None
+player_aux = None
+opponent_aux = None
 possible_moves_aux = []
 piece_select = -1
 
 
-def click_control(x, y, window, player_1, player_2, turn, possible_moves):
-    global player_1_aux, player_2_aux, possible_moves_aux
-    player_1_aux = player_1
-    player_2_aux = player_2
+def click_control(x, y, window, player, opponent, turn, possible_moves):
+    global player_aux, opponent_aux, possible_moves_aux
+    player_aux = player
+    opponent_aux = opponent
     possible_moves_aux = possible_moves
-    return turn_control(x, y, window, turn)
+    return turn_control(x, y, window)
 
 
-def turn_control(x, y, window, turn):
-    (player, oponent) = (
-        (player_1_aux, player_2_aux) if turn == 1 else (player_2_aux, player_1_aux)
-    )
-    player_game_phase = player.game_phase
+def turn_control(x, y, window):
+    player_game_phase = player_aux.game_phase
     if player_game_phase == GamePhaseConstants.SPLASH_MODE.value:
-        return splash_mode(x, y, player, window)
+        return splash_mode(x, y, player_aux, window)
     if player_game_phase == GamePhaseConstants.MOVING_MODE.value:
-        return moving_mode(x, y, player)
+        return moving_mode(x, y, player_aux)
     if player_game_phase == GamePhaseConstants.FLYING_MODE.value:
         return
     if player_game_phase == GamePhaseConstants.ELIMINATION_MODE.value:
-        return elimination_mode(x, y, player, oponent)
+        return elimination_mode(x, y, player_aux, opponent_aux)
 
 
 def splash_mode(x, y, player, window):
     index = 0
     if x == -100 and y == -100:
-        index = place_piece_ai(player_1_aux, player_2_aux)
+        index = place_piece_ai(player_aux, opponent_aux)
     player_moved = place_piece(
         x if x != -100 else positions[index][0],
         y if y != -100 else positions[index][1],
@@ -59,6 +57,9 @@ def splash_mode(x, y, player, window):
 
 
 def elimination_mode(x, y, player, oponent):
+    index = 0
+    # if x == -100 and y == -100:
+    # index = delete_piece_ai(player_aux, opponent_aux)
     if delete_piece(x, y, oponent):
         player.change_phase(False)
         return True
@@ -90,7 +91,10 @@ def show_possible_moves(index):
 def moving_mode(x, y, player):
     global possible_moves_aux, piece_select
     if x == -100 and y == -100:
-        (index, move) = move_piece_ai(player_1_aux, player_2_aux)
+        (index, move) = move_piece_ai(player_aux, opponent_aux)
+        print("AI is moving")
+        print("Index: ", index)
+        print("Move: ", move)
         x = positions[move][0]
         y = positions[move][1]
         piece_select = index

@@ -111,77 +111,80 @@ def number_of_three_pieces_configuration(board, player):
     return number_of_three_pieces_configurations
 
 
-def evaluate_drop_phase(board, player_1, player_2):
-    new_mill_1 = find_complete_mills(player_1, only_one=True, is_test=True)
-    new_mill_2 = find_complete_mills(player_2, only_one=True, is_test=True)
+def evaluate_drop_phase(board, player, opponent):
+    new_mill_1 = find_complete_mills(player, only_one=True, is_test=True)
+    new_mill_2 = find_complete_mills(opponent, only_one=True, is_test=True)
 
-    evaluation = (-new_mill_1 if new_mill_1 > new_mill_2 else new_mill_2) * 18
+    evaluation = (-new_mill_2 if new_mill_2 > new_mill_1 else new_mill_1) * 18
     # print("Evaluation - 1: ", evaluation)
 
-    complete_mills_1 = find_complete_mills(player_1)
-    complete_mills_2 = find_complete_mills(player_2)
+    complete_mills_1 = find_complete_mills(player)
+    complete_mills_2 = find_complete_mills(opponent)
 
-    evaluation = evaluation + (len(complete_mills_2) - len(complete_mills_1)) * 26
+    evaluation = evaluation + (len(complete_mills_1) - len(complete_mills_2)) * 26
     # print("Evaluation - 2: ", evaluation)
 
-    blocked_piece_1 = number_blocked_of_piece(board, player_1)
-    blocked_piece_2 = number_blocked_of_piece(board, player_2)
+    blocked_piece_1 = number_blocked_of_piece(board, player)
+    blocked_piece_2 = number_blocked_of_piece(board, opponent)
 
-    evaluation = evaluation + (blocked_piece_1 - blocked_piece_2) * 1
+    evaluation = evaluation + (blocked_piece_2 - blocked_piece_1) * 1
     # print("Evaluation - 3: ", evaluation)
 
-    pieces_1 = number_of_pieces(player_1)
-    pieces_2 = number_of_pieces(player_2)
+    pieces_1 = number_of_pieces(player)
+    pieces_2 = number_of_pieces(opponent)
 
-    evaluation = evaluation + (pieces_2 - pieces_1) * 9
+    evaluation = evaluation + (pieces_1 - pieces_2) * 9
     # print("Evaluation - 4: ", evaluation)
 
-    two_pieces_configurations_1 = number_of_two_pieces_configuration(board, player_1)
-    two_pieces_configurations_2 = number_of_two_pieces_configuration(board, player_2)
+    two_pieces_configurations_1 = number_of_two_pieces_configuration(board, player)
+    two_pieces_configurations_2 = number_of_two_pieces_configuration(board, opponent)
 
     evaluation = (
-        evaluation + (two_pieces_configurations_2 - two_pieces_configurations_1) * 10
+        evaluation + (two_pieces_configurations_1 - two_pieces_configurations_2) * 10
     )
     # print("Evaluation - 5: ", evaluation)
 
-    three_pieces_configurations_1 = number_of_three_pieces_configuration(
-        board, player_1
-    )
+    three_pieces_configurations_1 = number_of_three_pieces_configuration(board, player)
     three_pieces_configurations_2 = number_of_three_pieces_configuration(
-        board, player_2
+        board, opponent
     )
 
     evaluation = (
-        evaluation + (three_pieces_configurations_2 - three_pieces_configurations_1) * 7
+        evaluation + (three_pieces_configurations_1 - three_pieces_configurations_2) * 7
     )
     # print("Evaluation - 6: ", evaluation)
 
     return evaluation
 
 
-def evaluate_move_phase(board, player_1, player_2):
-    new_mill_1 = find_complete_mills(player_1, only_one=True)
-    new_mill_2 = find_complete_mills(player_2, only_one=True)
+def evaluate_move_phase(board, player, opponent):
+    new_mill_1 = find_complete_mills(player, only_one=True, is_test=True)
+    new_mill_2 = find_complete_mills(opponent, only_one=True, is_test=True)
 
-    evaluation = (-new_mill_1 if new_mill_1 > new_mill_2 else new_mill_2) * 14
+    evaluation = (-new_mill_2 if new_mill_2 > new_mill_1 else new_mill_1) * 14
     # print("Evaluation - 1: ", evaluation)
 
-    complete_mills_1 = find_complete_mills(player_1)
-    complete_mills_2 = find_complete_mills(player_2)
+    complete_mills_1 = find_complete_mills(player)
+    complete_mills_2 = find_complete_mills(opponent)
 
-    evaluation = evaluation + (len(complete_mills_2) - len(complete_mills_1)) * 43
+    evaluation = evaluation + (len(complete_mills_1) - len(complete_mills_2)) * 43
     # print("Evaluation - 2: ", evaluation)
 
-    blocked_piece_1 = number_blocked_of_piece(board, player_1)
-    blocked_piece_2 = number_blocked_of_piece(board, player_2)
+    blocked_piece_1 = number_blocked_of_piece(board, player)
+    blocked_piece_2 = number_blocked_of_piece(board, opponent)
 
-    evaluation = evaluation + (blocked_piece_1 - blocked_piece_2) * 10
+    evaluation = evaluation + (blocked_piece_2 - blocked_piece_1) * 10
     # print("Evaluation - 3: ", evaluation)
 
-    pieces_1 = number_of_pieces(player_1)
-    pieces_2 = number_of_pieces(player_2)
+    pieces_1 = number_of_pieces(player)
+    pieces_2 = number_of_pieces(opponent)
 
-    evaluation = evaluation + (pieces_2 - pieces_1) * 11
+    evaluation = evaluation + (pieces_1 - pieces_2) * 11
     # print("Evaluation - 4: ", evaluation)
 
+    return evaluation
+
+
+def evaluate_delete_phase(board, player, opponent):
+    evaluation = 0
     return evaluation
