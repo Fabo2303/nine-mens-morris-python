@@ -39,8 +39,8 @@ def is_scaled_mill(mill, player, only_one=False, is_test=False):
     if (
         (
             is_token_active(cirle_1)
-            and is_token_active(cirle_2)
-            and is_token_active(cirle_3)
+            or is_token_active(cirle_2)
+            or is_token_active(cirle_3)
         )
         or not only_one
     ) and is_scaled(cirle_1, cirle_2, cirle_3):

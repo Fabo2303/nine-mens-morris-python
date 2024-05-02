@@ -29,8 +29,10 @@ class Circle:
         self.rect = self.text.get_rect(center=(self.x, self.y))
         self.window.blit(self.text, self.rect)
 
-    def move(self, x, y):
+    def move(self, x, y, index_move):
         self.x, self.y = x, y
+        self.state = 1
+        self.index_origin = index_move
         if self.window is not None:
             self.draw()
 

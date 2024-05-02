@@ -39,8 +39,8 @@ class Player:
     def move_circle(self, index, index_move, x, y):
         for circle in self.circles:
             if circle.index_origin == index:
-                circle.index_origin = index_move
-                circle.move(x, y)
+                circle.move(x, y, index_move)
+                print(circle.state)
                 return
 
     def remove_circle(self, index):

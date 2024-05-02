@@ -15,7 +15,6 @@ pygame.display.set_icon(pygame.image.load("src/resources/icon.png"))
 pygame.display.set_caption(WindowConstants.CAPTION.value)
 # pygame.mixer.music.load("src/resources/hongkong.mp3")
 # pygame.mixer.music.play(-1)
-running = True
 
 list_modes = draw_menu_vs(screen)
 list_difficulty = []
@@ -26,9 +25,19 @@ player_2 = Player(2)
 turn = 1
 possible_moves = []
 player_moved = False
+running = True
 
 
-def detect_click_button(button_list):
+def check_loser():
+    if player_1.tokens_on_board == 2 and player_1.tokens_to_place == 0:
+        print("Player 2 wins")
+        pygame.quit()
+    if player_2.tokens_on_board == 2 and player_2.tokens_to_place == 0:
+        print("Player 1 wins")
+        pygame.quit()
+
+
+def detect_click_button(button_list, mouse_pos):
     for button_value, button_rect in button_list.items():
         if button_rect.collidepoint(mouse_pos):
             return button_value
@@ -47,12 +56,15 @@ def draw_piece_players():
 def draw_context():
     if game_mode == 0:
         draw_menu_vs(screen)
-    if game_mode == GameModeConstants.PLAYER_VS_AI.value:
+    if (
+        game_mode == GameModeConstants.PLAYER_VS_AI.value
+        or game_mode == GameModeConstants.AI_VS_AI.value
+    ):
         draw_menu_vs(screen, 1)
     if (
         game_mode == GameModeConstants.PLAYER_VS_PLAYER.value
         or (game_mode == GameModeConstants.PLAYER_VS_AI.value and game_dificulty != 0)
-        or game_mode == GameModeConstants.AI_VS_AI.value
+        or (game_mode == GameModeConstants.AI_VS_AI.value and game_dificulty != 0)
     ):
         draw_table(screen)
 
@@ -79,22 +91,24 @@ while running:
                             window=screen,
                             player=player_1 if turn == 1 else player_2,
                             opponent=player_2 if turn == 1 else player_1,
-                            turn=turn,
                             possible_moves=possible_moves,
                         )
                     else:
-                        game_dificulty = detect_click_button(list_difficulty)
+                        game_dificulty = detect_click_button(list_difficulty, mouse_pos)
                         list_difficulty.clear()
                 else:
-                    game_mode = detect_click_button(list_modes)
-                    if game_mode == GameModeConstants.PLAYER_VS_AI.value:
+                    game_mode = detect_click_button(list_modes, mouse_pos)
+                    if (
+                        game_mode == GameModeConstants.PLAYER_VS_AI.value
+                        or game_mode == GameModeConstants.AI_VS_AI.value
+                    ):
                         list_difficulty = draw_menu_vs(screen, 1)
                     list_modes.clear()
     screen.fill(ColorConstants.MENU_COLOR.value)
     draw_context()
     draw_piece_players()
     if (game_mode == GameModeConstants.PLAYER_VS_AI.value and turn == 2) or (
-        game_mode == GameModeConstants.AI_VS_AI.value
+        game_mode == GameModeConstants.AI_VS_AI.value and game_dificulty != 0
     ):
         player_moved = click_control(
             x=-100,
@@ -102,12 +116,13 @@ while running:
             window=screen,
             player=player_1 if turn == 1 else player_2,
             opponent=player_2 if turn == 1 else player_1,
-            turn=turn,
             possible_moves=possible_moves,
+            game_difficulty=game_dificulty,
         )
         # time.sleep(1)
     if player_moved:
         turn = change_turn(turn)
+    check_loser()
     pygame.display.flip()
     clock.tick(WindowConstants.FPS.value)
 

@@ -15,13 +15,15 @@ player_aux = None
 opponent_aux = None
 possible_moves_aux = []
 piece_select = -1
+game_difficulty_aux = 0
 
 
-def click_control(x, y, window, player, opponent, turn, possible_moves):
-    global player_aux, opponent_aux, possible_moves_aux
+def click_control(x, y, window, player, opponent, possible_moves, game_difficulty=0):
+    global player_aux, opponent_aux, possible_moves_aux, game_difficulty_aux
     player_aux = player
     opponent_aux = opponent
     possible_moves_aux = possible_moves
+    game_difficulty_aux = game_difficulty
     return turn_control(x, y, window)
 
 
@@ -40,7 +42,7 @@ def turn_control(x, y, window):
 def splash_mode(x, y, player, window):
     index = 0
     if x == -100 and y == -100:
-        index = place_piece_ai(player_aux, opponent_aux)
+        index = place_piece_ai(player_aux, opponent_aux, game_difficulty_aux)
     player_moved = place_piece(
         x if x != -100 else positions[index][0],
         y if y != -100 else positions[index][1],
@@ -58,9 +60,13 @@ def splash_mode(x, y, player, window):
 
 def elimination_mode(x, y, player, oponent):
     index = 0
-    # if x == -100 and y == -100:
-    # index = delete_piece_ai(player_aux, opponent_aux)
-    if delete_piece(x, y, oponent):
+    if x == -100 and y == -100:
+        index = delete_piece_ai(player_aux, opponent_aux, game_difficulty_aux)
+    if delete_piece(
+        x if x != -100 else positions[index][0],
+        y if y != 100 else positions[index][1],
+        oponent,
+    ):
         player.change_phase(False)
         return True
     return False
@@ -72,7 +78,7 @@ def select_piece(x, y, player):
         pos_x = circle.x
         pos_y = circle.y
         distance = dist((x, y), (pos_x, pos_y))
-        if distance < 10:
+        if distance < 15:
             piece_select = circle.index_origin
             show_possible_moves(piece_select)
             break
@@ -91,10 +97,7 @@ def show_possible_moves(index):
 def moving_mode(x, y, player):
     global possible_moves_aux, piece_select
     if x == -100 and y == -100:
-        (index, move) = move_piece_ai(player_aux, opponent_aux)
-        print("AI is moving")
-        print("Index: ", index)
-        print("Move: ", move)
+        (index, move) = move_piece_ai(player_aux, opponent_aux, game_difficulty_aux)
         x = positions[move][0]
         y = positions[move][1]
         piece_select = index
