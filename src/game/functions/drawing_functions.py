@@ -144,21 +144,22 @@ def draw_menu_vs(window, menu=0):
         MenuConstants.TEXT_SIZE.value,
     )
 
-    button_rects[3] = draw_button(
-        window,
-        (
-            GameModeConstants.AI_VS_AI.name.lower()
-            if menu == 0
-            else GameDifficultyConstants.HARD.name.lower()
-        ),
-        MenuConstants.BUTTON_X.value,
-        MenuConstants.BUTTON_Y.value + MenuConstants.BUTTON_SPACING.value * 2,
-        MenuConstants.BUTTON_WIDTH.value,
-        MenuConstants.BUTTON_HEIGHT.value,
-        ColorConstants.BUTTON_COLOR.value,
-        ColorConstants.TEXT_COLOR.value,
-        MenuConstants.TEXT_SIZE.value,
-    )
+    if menu != 0:
+        button_rects[3] = draw_button(
+            window,
+            (
+                GameModeConstants.AI_VS_AI.name.lower()
+                if menu == 0
+                else GameDifficultyConstants.HARD.name.lower()
+            ),
+            MenuConstants.BUTTON_X.value,
+            MenuConstants.BUTTON_Y.value + MenuConstants.BUTTON_SPACING.value * 2,
+            MenuConstants.BUTTON_WIDTH.value,
+            MenuConstants.BUTTON_HEIGHT.value,
+            ColorConstants.BUTTON_COLOR.value,
+            ColorConstants.TEXT_COLOR.value,
+            MenuConstants.TEXT_SIZE.value,
+        )
 
     return button_rects
 

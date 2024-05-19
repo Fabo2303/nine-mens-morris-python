@@ -1,6 +1,6 @@
 import math
 from game.constants.array_constants import adjacent_positions
-from game.functions.evaluate_functions import evaluate_move_phase
+from game.evaluate.evaluate_phases import evaluate_move_phase
 
 
 def get_best_move_medium(board, player, opponent):

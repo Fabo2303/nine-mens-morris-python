@@ -1,6 +1,6 @@
 import math
 from game.classes.Circle import Circle
-from game.functions.evaluate_functions import evaluate_drop_phase, find_complete_mills
+from game.evaluate.evaluate_phases import evaluate_drop_phase, find_complete_mills
 
 
 def get_best_drop_move_hard(board, player, opponent):

@@ -4,7 +4,8 @@ from game.classes.Player import Player
 
 
 def get_best_eliminate_move_easy(opponent):
-    return random.choice(generate_eliminate_moves(opponent))
+    move = random.choice(generate_eliminate_moves(opponent))
+    return move
 
 
 def generate_eliminate_moves(opponent):

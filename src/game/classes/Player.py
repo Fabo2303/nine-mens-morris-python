@@ -72,6 +72,16 @@ class Player:
                 player.circles.append(circle.copy_data())
         return player
 
+    def check_lose(self):
+        tokens = [0, 0, 0]
+        for circle in self.circles:
+            tokens[circle.number - 1] += 1
+        if self.tokens_to_place == 0:
+            for token in tokens:
+                if token == 0:
+                    return True
+        return False
+
     def print_circles(self):
         for circle in self.circles:
             print(circle.number, circle.x, circle.y, circle.index_origin)

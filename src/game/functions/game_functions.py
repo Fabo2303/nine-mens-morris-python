@@ -8,7 +8,7 @@ from game.moving_phase.moving_functions_ai import move_piece_ai
 from game.splash_phase.splash_functions import place_piece
 from game.splash_phase.splash_functions_ai import place_piece_ai
 from game.constants.array_constants import positions, adjacent_positions
-from game.functions.evaluate_functions import find_complete_mills
+from game.evaluate.evaluate_phases import find_complete_mills
 from game.moving_phase.moving_functions import move_piece
 
 player_aux = None
@@ -62,12 +62,18 @@ def elimination_mode(x, y, player, oponent):
     index = 0
     if x == -100 and y == -100:
         index = delete_piece_ai(player_aux, opponent_aux, game_difficulty_aux)
-    if delete_piece(
+        print(index)
+        print(positions[index])
+    player_moved = delete_piece(
         x if x != -100 else positions[index][0],
-        y if y != 100 else positions[index][1],
+        y if y != -100 else positions[index][1],
         oponent,
-    ):
+    )
+    print(player_moved)
+    if player_moved:
+        print("Piece eliminated")
         player.change_phase(False)
+        print(player.game_phase)
         return True
     return False
 

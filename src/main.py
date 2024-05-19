@@ -29,10 +29,10 @@ running = True
 
 
 def check_loser():
-    if player_1.tokens_on_board == 2 and player_1.tokens_to_place == 0:
+    if player_1.check_lose():
         print("Player 2 wins")
         pygame.quit()
-    if player_2.tokens_on_board == 2 and player_2.tokens_to_place == 0:
+    if player_2.check_lose():
         print("Player 1 wins")
         pygame.quit()
 
@@ -119,7 +119,7 @@ while running:
             possible_moves=possible_moves,
             game_difficulty=game_dificulty,
         )
-        # time.sleep(1)
+        time.sleep(1)
     if player_moved:
         turn = change_turn(turn)
     check_loser()
