@@ -31,14 +31,14 @@ def evaluate_drop_phase(board, player, opponent):
     pieces_1 = number_of_pieces(player)
     pieces_2 = number_of_pieces(opponent)
 
-    evaluation = evaluation + (pieces_1 - pieces_2) * 9
+    evaluation = evaluation + (pieces_1 - pieces_2) * 6
     # print("Evaluation - 4: ", evaluation)
 
     two_pieces_configurations_1 = number_of_two_pieces_configuration(board, player)
     two_pieces_configurations_2 = number_of_two_pieces_configuration(board, opponent)
 
     evaluation = (
-        evaluation + (two_pieces_configurations_1 - two_pieces_configurations_2) * 10
+        evaluation + (two_pieces_configurations_1 - two_pieces_configurations_2) * 12
     )
     # print("Evaluation - 5: ", evaluation)
 
@@ -77,8 +77,17 @@ def evaluate_move_phase(board, player, opponent):
     pieces_1 = number_of_pieces(player)
     pieces_2 = number_of_pieces(opponent)
 
-    evaluation = evaluation + (pieces_1 - pieces_2) * 11
+    evaluation = evaluation + (pieces_1 - pieces_2) * 8
     # print("Evaluation - 4: ", evaluation)
+    two_pieces_configurations_1 = number_of_two_pieces_configuration(board, player)
+    two_pieces_configurations_2 = number_of_two_pieces_configuration(board, opponent)
+
+    evaluation = (
+        evaluation + (two_pieces_configurations_1 - two_pieces_configurations_2) * 7
+    )
+
+    # double morris 42
+    # winning configuration 1086
 
     return evaluation
 

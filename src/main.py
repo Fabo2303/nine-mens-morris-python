@@ -29,6 +29,9 @@ running = True
 
 
 def check_loser():
+    if player_1.check_lose() and player_2.check_lose():
+        print("Draw")
+        pygame.quit()
     if player_1.check_lose():
         print("Player 2 wins")
         pygame.quit()
