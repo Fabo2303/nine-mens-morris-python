@@ -117,6 +117,23 @@ def number_of_three_pieces_configuration(board, player):
     return number_of_three_pieces_configurations
 
 
+def get_blocked_mill(player, opponent, move):
+    probably_mill = get_indexes_probably_form_mill(opponent)
+    for index_1 in probably_mill:
+        for index_2 in probably_mill:
+            if index_1 == index_2:
+                continue
+            for circle_player in player.circles:
+                if circle_player.index_origin == move:
+                    if (index_1, index_2, circle_player.index_origin) in mill_condition:
+                        circle_player.state = 0
+                        return True
+                    if (index_2, index_1, circle_player.index_origin) in mill_condition:
+                        circle_player.state = 0
+                        return True
+    return False
+
+
 def get_indexes_probably_form_mill(player):
     indexes = set()
     for mill in mill_condition:

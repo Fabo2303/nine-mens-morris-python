@@ -7,7 +7,23 @@ from game.evaluate.evaluate_functions import (
     number_of_two_pieces_configuration,
     number_of_three_pieces_configuration,
     winning_configuration,
+    get_blocked_mill,
 )
+from game.constants.array_constants import mill_condition
+
+
+def evaluate_drop_phase_medium(board, player, opponent, move):
+    evaluation = 0
+    blocked_mill = get_blocked_mill(player, opponent, move)
+    if blocked_mill:
+        evaluation += 200
+    mill_formed = find_complete_mills(player)
+    if len(mill_formed) > 0:
+        evaluation += 300
+    blocked_piece = number_blocked_of_piece(board, opponent)
+    if blocked_piece > 0:
+        evaluation += 50
+    return evaluation
 
 
 def evaluate_drop_phase(board, player, opponent):

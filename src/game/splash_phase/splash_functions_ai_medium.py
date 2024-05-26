@@ -1,6 +1,6 @@
 import math
 from game.classes.Circle import Circle
-from game.evaluate.evaluate_phases import evaluate_drop_phase
+from game.evaluate.evaluate_phases import evaluate_drop_phase_medium
 
 
 def get_best_drop_move_medium(board, player, opponent):
@@ -16,7 +16,7 @@ def get_best_drop_move_medium(board, player, opponent):
             player_copy.player_number,
         )
         create_circle_for_player(new_board, player_copy, move)
-        eval = minimax_drop_phase(new_board, player_copy, opponent_copy)
+        eval = minimax_drop_phase(new_board, player_copy, opponent_copy, move)
         if eval > best_eval:
             best_eval = eval
             best_move = move
@@ -31,8 +31,8 @@ def generate_drop_moves(board):
     return drop_moves
 
 
-def minimax_drop_phase(board, player_copy, opponent_copy):
-    evaluation = evaluate_drop_phase(board, player_copy, opponent_copy)
+def minimax_drop_phase(board, player_copy, opponent_copy, move):
+    evaluation = evaluate_drop_phase_medium(board, player_copy, opponent_copy, move)
     return evaluation
 
 
