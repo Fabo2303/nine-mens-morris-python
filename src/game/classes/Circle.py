@@ -50,4 +50,8 @@ class Circle:
             self.draw()
 
     def copy_data(self):
-        return Circle(None, self.x, self.y, self.radius, self.index_origin, self.color)
+        circle = Circle(
+            None, self.x, self.y, self.radius, self.index_origin, self.color
+        )
+        circle.change_number(self.number)
+        return circle

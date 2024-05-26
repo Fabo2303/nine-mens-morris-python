@@ -52,7 +52,6 @@ def splash_mode(x, y, player, window):
     if player_moved:
         is_mill = find_complete_mills(player, True, False)
         if is_mill == 1:
-            print("Mill")
             player.change_phase(True)
             return
     return player_moved
@@ -62,18 +61,13 @@ def elimination_mode(x, y, player, oponent):
     index = 0
     if x == -100 and y == -100:
         index = delete_piece_ai(player_aux, opponent_aux, game_difficulty_aux)
-        print(index)
-        print(positions[index])
     player_moved = delete_piece(
         x if x != -100 else positions[index][0],
         y if y != -100 else positions[index][1],
         oponent,
     )
-    print(player_moved)
     if player_moved:
-        print("Piece eliminated")
         player.change_phase(False)
-        print(player.game_phase)
         return True
     return False
 
@@ -116,7 +110,6 @@ def moving_mode(x, y, player):
             if len(possible_moves_aux) > 0:
                 possible_moves_aux.clear()
             if is_mill == 1:
-                print("Mill")
                 player.change_phase(True)
                 return
             piece_select = -1

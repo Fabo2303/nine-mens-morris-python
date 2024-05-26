@@ -1,7 +1,12 @@
 import pygame
 from game.classes.Player import Player
 from game.constants.constant import WindowConstants, ColorConstants, GameModeConstants
-from game.functions.drawing_functions import draw_table, draw_menu_vs, draw_pieces
+from game.functions.drawing_functions import (
+    draw_table,
+    draw_menu_vs,
+    draw_pieces,
+    draw_winner,
+)
 from game.functions.game_functions import click_control
 import time
 
@@ -26,18 +31,26 @@ turn = 1
 possible_moves = []
 player_moved = False
 running = True
+winner = ""
+moves_without_capture = 0
+token_1 = len(player_1.circles)
+token_2 = len(player_2.circles)
 
 
 def check_loser():
+    global game_mode, turn, winner
     if player_1.check_lose() and player_2.check_lose():
-        print("Draw")
-        pygame.quit()
+        game_mode = 0
+        turn = 0
+        winner = "Draw"
     if player_1.check_lose():
-        print("Player 2 wins")
-        pygame.quit()
+        game_mode = 0
+        turn = 0
+        winner = "Player 2 wins!"
     if player_2.check_lose():
-        print("Player 1 wins")
-        pygame.quit()
+        game_mode = 0
+        turn = 0
+        winner = "Player 1 wins!"
 
 
 def detect_click_button(button_list, mouse_pos):
@@ -78,6 +91,22 @@ def change_turn(turn):
     return 1
 
 
+def update_token():
+    global token_1, token_2
+    token_1 = len(player_1.circles)
+    token_2 = len(player_2.circles)
+
+
+def add_move_without_capture():
+    global moves_without_capture, game_mode, turn, winner
+    if len(player_1.circles) == token_1 and len(player_2.circles) == token_2:
+        moves_without_capture += 1
+    if moves_without_capture == 50:
+        game_mode = 0
+        turn = 0
+        winner = "Draw"
+
+
 while running:
     player_moved = False
     for event in pygame.event.get():
@@ -88,14 +117,18 @@ while running:
                 mouse_pos = pygame.mouse.get_pos()
                 if len(list_modes) == 0:
                     if len(list_difficulty) == 0:
-                        player_moved = click_control(
-                            x=mouse_pos[0],
-                            y=mouse_pos[1],
-                            window=screen,
-                            player=player_1 if turn == 1 else player_2,
-                            opponent=player_2 if turn == 1 else player_1,
-                            possible_moves=possible_moves,
-                        )
+                        if (
+                            turn == 1
+                            or game_mode == GameModeConstants.PLAYER_VS_PLAYER.value
+                        ):
+                            player_moved = click_control(
+                                x=mouse_pos[0],
+                                y=mouse_pos[1],
+                                window=screen,
+                                player=player_1 if turn == 1 else player_2,
+                                opponent=player_2 if turn == 1 else player_1,
+                                possible_moves=possible_moves,
+                            )
                     else:
                         game_dificulty = detect_click_button(list_difficulty, mouse_pos)
                         list_difficulty.clear()
@@ -108,8 +141,9 @@ while running:
                         list_difficulty = draw_menu_vs(screen, 1)
                     list_modes.clear()
     screen.fill(ColorConstants.MENU_COLOR.value)
-    draw_context()
-    draw_piece_players()
+    if winner == "":
+        draw_context()
+        draw_piece_players()
     if (game_mode == GameModeConstants.PLAYER_VS_AI.value and turn == 2) or (
         game_mode == GameModeConstants.AI_VS_AI.value and game_dificulty != 0
     ):
@@ -125,7 +159,11 @@ while running:
         time.sleep(1)
     if player_moved:
         turn = change_turn(turn)
+        add_move_without_capture()
+        update_token()
     check_loser()
+    if winner != "":
+        draw_winner(screen, winner)
     pygame.display.flip()
     clock.tick(WindowConstants.FPS.value)
 

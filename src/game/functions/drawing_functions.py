@@ -90,6 +90,19 @@ def draw_escalated(window, text, x, y, width, height, text_color, font_size, ang
     window.blit(text_surface, text_rect)
 
 
+def draw_winner(window, text):
+    draw_title(
+        window,
+        text.lower(),
+        MenuConstants.TITLE_X.value,
+        MenuConstants.TITLE_Y.value,
+        MenuConstants.TITLE_WIDTH.value,
+        MenuConstants.TITLE_HEIGHT.value,
+        ColorConstants.TEXT_COLOR.value,
+        MenuConstants.TITLE_SIZE.value,
+    )
+
+
 def draw_menu_vs(window, menu=0):
     draw_title(
         window,
@@ -103,7 +116,7 @@ def draw_menu_vs(window, menu=0):
     )
     draw_escalated(
         window,
-        "scaled" if menu == 0 else "💀💀💀",
+        "scaled" if menu == 0 else "0.0",
         MenuConstants.TITLE_X.value + 200,
         MenuConstants.TITLE_Y.value + 50,
         MenuConstants.TITLE_WIDTH.value,

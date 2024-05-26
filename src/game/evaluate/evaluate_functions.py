@@ -1,4 +1,5 @@
 from game.classes.Circle import Circle
+from game.classes.Player import Player
 from game.constants.array_constants import mill_condition, adjacent_positions
 
 
@@ -50,6 +51,12 @@ def is_scaled_mill(mill, player, only_one=False, is_test=False):
         block_token(cirle_3)
         return True
     return False
+
+
+def winning_configuration(opponent: Player):
+    if opponent.check_lose():
+        return 1
+    return 0
 
 
 def find_complete_mills(player, only_one=False, is_test=False):

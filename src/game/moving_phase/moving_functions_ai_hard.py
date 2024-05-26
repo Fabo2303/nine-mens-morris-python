@@ -13,7 +13,7 @@ def get_best_move_hard(board, player, opponent):
             player_copy = player.copy_data()
             opponent_copy = opponent.copy_data()
             generate_move_in_board(new_board, player_copy, index, move)
-            eval = minimax_move_phase(new_board, 2, False, player_copy, opponent_copy)
+            eval = minimax_move_phase(new_board, 3, False, player_copy, opponent_copy)
             if eval > best_eval:
                 best_eval = eval
                 best_move = (index, move)

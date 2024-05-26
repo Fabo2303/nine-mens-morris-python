@@ -6,6 +6,7 @@ from game.evaluate.evaluate_functions import (
     number_of_pieces,
     number_of_two_pieces_configuration,
     number_of_three_pieces_configuration,
+    winning_configuration,
 )
 
 
@@ -88,6 +89,8 @@ def evaluate_move_phase(board, player, opponent):
 
     # double morris 42
     # winning configuration 1086
+    winning = winning_configuration(opponent) - winning_configuration(player)
+    evaluation = evaluation + winning * 1086
 
     return evaluation
 

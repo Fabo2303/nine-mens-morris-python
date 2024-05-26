@@ -18,10 +18,9 @@ def delete_piece_ai(player, opponent, game_difficulty):
 
 
 def get_best_elimination_move(board, player, opponent, game_difficulty):
-    return get_best_eliminate_move_medium(board, player, opponent)
     if game_difficulty == GameDifficultyConstants.EASY.value:
         return get_best_eliminate_move_easy(opponent)
     if game_difficulty == GameDifficultyConstants.MEDIUM.value:
         return get_best_eliminate_move_medium(board, player, opponent)
     if game_difficulty == GameDifficultyConstants.HARD.value:
-        return get_best_eliminate_move_hard(board, player, opponent)
+        return get_best_eliminate_move_medium(board, player, opponent)

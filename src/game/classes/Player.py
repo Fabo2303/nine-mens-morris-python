@@ -40,7 +40,6 @@ class Player:
         for circle in self.circles:
             if circle.index_origin == index:
                 circle.move(x, y, index_move)
-                print(circle.state)
                 return
 
     def remove_circle(self, index):
